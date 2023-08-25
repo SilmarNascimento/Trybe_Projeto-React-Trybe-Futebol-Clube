@@ -29,3 +29,5 @@ SequelizeTeam.init({
   modelName: 'teams',
   timestamps: false,
 });
+
+export default SequelizeTeam;
