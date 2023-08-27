@@ -5,12 +5,21 @@ import TeamModel from '../models/TeamModel';
 
 export default class TeamService {
   private teamModel: ITeamModel;
-  constructor(model: ITeamModel) {
+
+  constructor(model?: ITeamModel) {
     this.teamModel = model ?? new TeamModel();
   }
 
-  public async findAll(): Promise<ServiceResponse<ITeam[]>> {
+  public async getAllTeams(): Promise<ServiceResponse<ITeam[]>> {
     const allTeams = await this.teamModel.findAll();
     return { status: 'SUCCESSFUL', data: allTeams };
+  }
+
+  public async getTeamById(id: ITeam['id']): Promise<ServiceResponse<ITeam>> {
+    const teamById = await this.teamModel.findById(id);
+    if (!teamById) {
+      return { status: 'NOT_FOUND', data: { message: `Team ${id} not found!` } };
+    }
+    return { status: 'SUCCESSFUL', data: teamById };
   }
 }
