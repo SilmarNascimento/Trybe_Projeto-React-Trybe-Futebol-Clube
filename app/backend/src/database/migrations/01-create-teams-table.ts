@@ -12,11 +12,12 @@ export default {
       },
       teamName: {
         allowNull: false,
+        field: 'team_name',
         type: DataTypes.STRING,
       },
     })
   },
   down(queryInterface: QueryInterface) {
-
+    return queryInterface.dropTable('teams');
   },
 }

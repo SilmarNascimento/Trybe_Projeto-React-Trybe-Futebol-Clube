@@ -22,7 +22,7 @@ describe('Testes para o endpoint /teams', function() {
       .send();
 
     expect(httpResponse.status).to.be.equal(200);
-    expect(httpResponse.body).to.be.equal(teamsMock.dbTeams);
+    expect(httpResponse.body).to.be.deep.equal(teamsMock.dbTeams);
   });
 
   it('Verifica a resposta do método GET na rota /teams/:id', async function() {
@@ -34,6 +34,6 @@ describe('Testes para o endpoint /teams', function() {
       .send();
     
     expect(httpResponse.status).to.be.equal(200);
-    expect(httpResponse.body).to.be.equal(teamsMock.dbTeamById);
+    expect(httpResponse.body).to.be.deep.equal(teamsMock.dbTeamById);
   })
 });

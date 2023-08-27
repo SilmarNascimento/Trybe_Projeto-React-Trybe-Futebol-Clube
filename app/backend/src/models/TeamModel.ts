@@ -7,16 +7,12 @@ export default class TeamModel implements ITeamModel {
 
   async findAll(): Promise<ITeam[]> {
     const dbTeams = await this.ormModel.findAll();
-    const findAllTeams = dbTeams.map((team: SequelizeTeam) => {
-      const { id, teamName }: ITeam = team.dataValues;
-      return { id, teamName };
-    });
-    return findAllTeams;
+    return dbTeams;
   }
 
   async findById(id: number): Promise<ITeam | null> {
     const dbTeam = await this.ormModel.findByPk(id);
     if (!dbTeam) return null;
-    return dbTeam.dataValues;
+    return dbTeam;
   }
 }
