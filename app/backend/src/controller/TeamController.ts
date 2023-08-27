@@ -6,7 +6,6 @@ export default class TeamController {
   constructor(private teamService = new TeamService()) {}
 
   public async getAllTeams(_request: Request, response: Response): Promise<Response> {
-    console.log('entrei controller');
     const { status, data } = await this.teamService.getAllTeams();
     return response.status(mapStatusHTTP(status)).json(data);
   }
