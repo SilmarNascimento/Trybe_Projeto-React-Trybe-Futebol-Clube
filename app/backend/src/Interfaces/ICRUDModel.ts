@@ -2,8 +2,11 @@ export interface ICRUDModelCreator<Type> {
   create(data: Partial<Type>): Promise<Type>
 }
 
-export interface ICRUDModelReader<Type> {
+export interface ICRUDModelReaderAll<Type> {
   findAll(): Promise<Type[]>;
+}
+
+export interface ICRUDModelReaderById<Type> {
   findById(id: number): Promise<Type | null>;
 }
 
@@ -14,6 +17,10 @@ export interface ICRUDModelUpdater<Type> {
 export interface ICRUDModelDeleter {
   delete(id: number): Promise<number>;
 }
+
+export interface ICRUDModelReader<Type> extends
+  ICRUDModelReaderAll<Type>,
+  ICRUDModelReaderById<Type> {}
 
 export interface ICRUDModel<Type> extends
   ICRUDModelCreator<Type>,

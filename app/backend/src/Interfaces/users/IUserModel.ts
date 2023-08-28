@@ -1,4 +1,4 @@
-import { ICRUDModelCreator } from '../ICRUDModel';
-import { IUser } from './IUser';
+import { ICRUDModelReaderById } from '../ICRUDModel';
+import { IUser, IUserLogin } from './IUser';
 
-export type IUserModel = ICRUDModelCreator<IUser>;
+export interface IUserModel extends IUserLogin, ICRUDModelReaderById<IUser> {}
