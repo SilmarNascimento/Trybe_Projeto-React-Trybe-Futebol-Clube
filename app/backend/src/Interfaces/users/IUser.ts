@@ -11,5 +11,5 @@ export type Token = {
 };
 
 export interface IUserLogin {
-  createToken(data: Partial<IUser>): Promise<Token | undefined>
+  createToken(data: Partial<IUser>): Promise<Token | void>
 }

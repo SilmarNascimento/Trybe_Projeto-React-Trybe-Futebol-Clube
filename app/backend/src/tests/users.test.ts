@@ -111,17 +111,49 @@ describe('Testes para o endpoint /login', function() {
     expect(httpResponse.status).to.be.equal(401);
     expect(httpResponse.body).to.be.deep.equal(usersMock.errorMessage.invalidRequest);
   });
+
+  it('Verifica a resposta do método POST na rota /login com um email não cadastrado', async function() {
+    sinon.stub(SequelizeUser, 'findOne').resolves(null);
+
+    const httpResponse = await chai
+      .request(app)
+      .get('/login')
+      .send({
+        email: usersMock.validEmail,
+        password: usersMock.validPassword,
+      });
+    
+    expect(httpResponse.status).to.be.equal(401);
+    expect(httpResponse.body).to.be.deep.equal(usersMock.errorMessage.invalidRequest);
+  });
+
+  it('Verifica a resposta do método POST na rota /login com senha incorreta', async function() {
+    sinon.stub(SequelizeUser, 'findOne').resolves(usersMock.userFound as any);
+
+    const httpResponse = await chai
+      .request(app)
+      .get('/login')
+      .send({
+        email: usersMock.validEmail,
+        password: usersMock.invalidPassword.incorrect,
+      });
+    
+    expect(httpResponse.status).to.be.equal(401);
+    expect(httpResponse.body).to.be.deep.equal(usersMock.errorMessage.invalidRequest);
+  });
+
+  it('Verifica a resposta do método POST na rota /login com senha e password corretos para um usuário cadastrado', async function() {
+    sinon.stub(SequelizeUser, 'findOne').resolves(usersMock.userFound as any);
+
+    const httpResponse = await chai
+      .request(app)
+      .get('/login')
+      .send({
+        email: usersMock.validEmail,
+        password: usersMock.validPassword,
+      });
+    
+    expect(httpResponse.status).to.be.equal(200);
+    expect(httpResponse.body).to.be.deep.equal(usersMock.requestResponse);
+  });
 });
-
-
-/* it('Verifica a resposta do método POST na rota /login sem email e password', async function() {
-  sinon.stub(SequelizeUser, 'findAll').resolves(teamsMock.dbTeams as any);
-  
-  const httpResponse = await chai
-    .request(app)
-    .post('/teams')
-    .send();
-
-  expect(httpResponse.status).to.be.equal(200);
-  expect(httpResponse.body).to.be.deep.equal(teamsMock.dbTeams);
-}); */

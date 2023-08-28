@@ -7,7 +7,7 @@ import { IUserModel } from '../Interfaces/users/IUserModel';
 export default class UserModel implements IUserModel {
   private ormModel = SequelizeUser;
 
-  async createToken(data: Partial<IUser>): Promise<Token | undefined> {
+  async createToken(data: Partial<IUser>): Promise<Token | void> {
     const { email, password } = data;
     const userFound = await this.ormModel.findOne({ where: { email } });
     if (userFound && password && bcrypt.compareSync(password, userFound.password)) {
