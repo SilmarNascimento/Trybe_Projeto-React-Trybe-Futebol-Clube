@@ -38,7 +38,7 @@ export default class Validations {
     const decoded = jwtUtils.verify(token);
     const user = await this.userModel.findById(decoded.id);
     if (!user) {
-      return response.status(401).json({ message: 'Invalid token' });
+      return response.status(401).json({ message: 'Token must be a valid token' });
     }
     next();
   }

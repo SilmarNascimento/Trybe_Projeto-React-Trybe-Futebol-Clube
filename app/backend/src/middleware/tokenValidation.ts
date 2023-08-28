@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+/* import { NextFunction, Request, Response } from 'express';
 import jwtUtil from '../utils/jwt.utils';
 import UserModel from '../models/UserModel';
 
@@ -25,3 +25,4 @@ const tokenValidation = async (
 };
 
 export default tokenValidation;
+ */
