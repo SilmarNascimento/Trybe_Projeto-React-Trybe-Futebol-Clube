@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import jwtUtil from '../utils/jwt.utils';
-import UserModel from '../database/models/user.model';
+import UserModel from '../models/UserModel';
 
 const getToken = (authorization: string): string => authorization.split(' ')[1];
 
@@ -14,7 +14,7 @@ const tokenValidation = async (
     if (!authorization) { return response.status(401).json({ message: 'Token not found' }); }
     const token = getToken(authorization);
     const decoded = jwtUtil.verify(token);
-    const user = await UserModel.findOne({ where: { username: decoded.username } });
+    const user = await UserModel.findById(decoded.id);
     if (!user) {
       return response.status(401).json({ message: 'Invalid token' });
     }
