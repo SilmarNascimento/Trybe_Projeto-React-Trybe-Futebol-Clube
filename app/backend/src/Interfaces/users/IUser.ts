@@ -6,10 +6,10 @@ export interface IUser {
   password: string;
 }
 
-export type Token = {
+export interface IToken {
   token: string;
-};
+}
 
 export interface IUserLogin {
-  createToken(data: Partial<IUser>): Promise<Token | void>
+  createToken(data: Partial<IUser>): Promise<IToken | void>
 }

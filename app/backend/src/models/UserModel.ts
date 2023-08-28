@@ -1,16 +1,16 @@
 import * as bcrypt from 'bcryptjs';
 import jwtUtils from '../utils/jwt.utils';
 import SequelizeUser from '../database/models/SequelizeUser';
-import { IUser, Token } from '../Interfaces/users/IUser';
+import { IUser, IToken } from '../Interfaces/users/IUser';
 import { IUserModel } from '../Interfaces/users/IUserModel';
 
 export default class UserModel implements IUserModel {
   private ormModel = SequelizeUser;
 
-  async createToken(data: Partial<IUser>): Promise<Token | void> {
+  async createToken(data: Pick<IUser, 'email' | 'password'>): Promise<IToken | void> {
     const { email, password } = data;
     const userFound = await this.ormModel.findOne({ where: { email } });
-    if (userFound && password && bcrypt.compareSync(password, userFound.password)) {
+    if (userFound && bcrypt.compareSync(password, userFound.password)) {
       const { id, username } = userFound;
       const token = jwtUtils.sign({ id, username });
       return { token };
