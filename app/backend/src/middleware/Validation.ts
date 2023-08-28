@@ -5,14 +5,18 @@ import { IUserModel } from '../Interfaces/users/IUserModel';
 import { loginSchema } from './schema';
 
 export default class Validation {
-  constructor(private userModel: IUserModel = new UserModel()) {}
+  constructor(private userModel: IUserModel = new UserModel()) {
+    this.tokenValidation = this.tokenValidation.bind(this);
+  }
 
   static loginValidation(
     request: Request,
     response: Response,
     next: NextFunction,
   ): Response | void {
+    console.log('entrei validação');
     const { email, password } = request.body;
+    console.log('email da request: ', email);
     if (!email || !password) {
       return response.status(400).json({ message: 'All fields must be filled' });
     }

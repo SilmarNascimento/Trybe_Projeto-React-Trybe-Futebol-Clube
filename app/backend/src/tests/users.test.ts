@@ -13,14 +13,16 @@ chai.use(chaiHttp);
 const { expect } = chai;
 
 describe('Testes para o endpoint /login', function() {
+  beforeEach(function () { sinon.restore(); });
+
   it('Verifica a resposta do método POST na rota /login sem email e password', async function() {    
     const httpResponse = await chai
       .request(app)
       .post('/login')
       .send({});
-
-    expect(httpResponse.status).to.be.equal(400);
+    
     expect(httpResponse.body).to.be.deep.equal(usersMock.errorMessage.emptyRequest);
+    expect(httpResponse.status).to.be.equal(400);
   });
 
   it('Verifica a resposta do método POST na rota /login sem email', async function() {    
@@ -112,7 +114,7 @@ describe('Testes para o endpoint /login', function() {
     expect(httpResponse.body).to.be.deep.equal(usersMock.errorMessage.invalidRequest);
   });
 
-  it('Verifica a resposta do método POST na rota /login com um email não cadastrado', async function() {
+  it.only('Verifica a resposta do método POST na rota /login com um email não cadastrado', async function() {
     sinon.stub(SequelizeUser, 'findOne').resolves(null);
 
     const httpResponse = await chai

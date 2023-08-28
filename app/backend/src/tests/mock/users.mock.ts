@@ -31,10 +31,10 @@ const invalidPassword = {
 };
 
 const errorMessage = {
-  emptyRequest: 'All fields must be filled',
-  invalidRequest: 'Invalid email or password',
-  tokenNotFound: 'Token not found',
-  userTokenNotFound: 'Token must be a valid token',
+  emptyRequest: { message: 'All fields must be filled'},
+  invalidRequest: { message: 'Invalid email or password' },
+  tokenNotFound: { message: 'Token not found' },
+  userTokenNotFound: { message: 'Token must be a valid token' },
 }
 
 export default {

@@ -13,6 +13,8 @@ chai.use(chaiHttp);
 const { expect } = chai;
 
 describe('Testes para o endpoint /teams', function() {
+  beforeEach(function () { sinon.restore(); });
+
   it('Verifica a resposta do método GET na rota /teams', async function() {
     sinon.stub(SequelizeTeam, 'findAll').resolves(teamsMock.dbTeams as any);
     
