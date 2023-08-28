@@ -9,7 +9,7 @@ export const emailSchema = Joi
   .required()
   .messages({
     'string.pattern.base': defaultErrorMessage,
-    'any.required': defaultErrorMessage,
+    'string.base': defaultErrorMessage,
   });
 
 export const passwordSchema = Joi
@@ -18,7 +18,7 @@ export const passwordSchema = Joi
   .required()
   .messages({
     'string.pattern.base': defaultErrorMessage,
-    'any.required': defaultErrorMessage,
+    'string.base': defaultErrorMessage,
     'string.min': defaultErrorMessage,
   });
 
