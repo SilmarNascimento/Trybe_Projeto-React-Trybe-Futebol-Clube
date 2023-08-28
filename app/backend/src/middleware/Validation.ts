@@ -4,7 +4,7 @@ import UserModel from '../models/UserModel';
 import { IUserModel } from '../Interfaces/users/IUserModel';
 import { loginSchema } from './schema';
 
-export default class Validations {
+export default class Validation {
   constructor(private userModel: IUserModel = new UserModel()) {}
 
   static loginValidation(
@@ -23,7 +23,7 @@ export default class Validations {
     next();
   }
 
-  static getToken(authorization: string): string {
+  private static getToken(authorization: string): string {
     return authorization.split(' ')[1];
   }
 
@@ -34,7 +34,7 @@ export default class Validations {
   ): Promise<Response | void> {
     const { authorization } = request.headers;
     if (!authorization) { return response.status(401).json({ message: 'Token not found' }); }
-    const token = Validations.getToken(authorization);
+    const token = Validation.getToken(authorization);
     const decoded = jwtUtils.verify(token);
     const user = await this.userModel.findById(decoded.id);
     if (!user) {
