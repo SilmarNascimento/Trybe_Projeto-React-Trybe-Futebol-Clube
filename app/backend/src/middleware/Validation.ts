@@ -38,7 +38,8 @@ export default class Validation {
     }
     const token = Validation.getToken(authorization);
     try {
-      jwtUtils.verify(token);
+      const userToken = jwtUtils.verify(token);
+      request.userToken = userToken;
       next();
     } catch (error) {
       return response.status(401).json({ message: 'Token must be a valid token' });

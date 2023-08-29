@@ -1,5 +1,6 @@
 import * as express from 'express';
 import router from './routes';
+import { TokenPayload } from './utils/jwt.utils';
 
 class App {
   public app: express.Express;
@@ -32,6 +33,12 @@ class App {
 
   public start(PORT: string | number): void {
     this.app.listen(PORT, () => console.log(`Running on port ${PORT}`));
+  }
+}
+
+declare module 'express-serve-static-core'{
+  interface Request {
+    userToken: TokenPayload
   }
 }
 
