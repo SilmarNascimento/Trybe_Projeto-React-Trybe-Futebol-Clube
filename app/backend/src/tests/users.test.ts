@@ -158,7 +158,7 @@ describe('Testes para o endpoint /login', function() {
       });
     
     expect(httpResponse.status).to.be.equal(200);
-    expect(httpResponse.body).to.be.deep.equal(usersMock.requestResponse);
+    expect(httpResponse.body).to.be.deep.equal(usersMock.requestTokenResponse);
   });
 
   //ENDPOINT /LOGIN/ROLE - TOKEN
@@ -182,12 +182,15 @@ describe('Testes para o endpoint /login', function() {
   });
 
   it('Verifica a resposta do método GET na rota /login/role com token token válido', async function() {
+    sinon.stub(SequelizeUser, 'findByPk').resolves(usersMock.userFound as any);
+
+    const { token } = usersMock.requestTokenResponse;
     const httpResponse = await chai
       .request(app)
       .get('/login/role')
-      .set('Authorization', `Bearer InvalidToken`);
+      .set('Authorization', `Bearer ${token}`);
     
-    expect(httpResponse.status).to.be.equal(200);
     expect(httpResponse.body).to.be.deep.equal(usersMock.getRoleResponse);
+    expect(httpResponse.status).to.be.equal(200);
   });
 });

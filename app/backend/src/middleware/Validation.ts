@@ -1,12 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import jwtUtils from '../utils/jwt.utils';
-import UserModel from '../models/UserModel';
-import { IUserModel } from '../Interfaces/users/IUserModel';
 import { loginSchema } from './schema';
 
 export default class Validation {
-  constructor(private userModel: IUserModel = new UserModel()) {}
-
   static loginValidation(
     request: Request,
     response: Response,

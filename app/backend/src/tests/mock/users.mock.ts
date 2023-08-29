@@ -18,7 +18,7 @@ const getRoleResponse = {
   role: 'admin'
 }
 
-const requestResponse = {
+const requestTokenResponse = {
   token: jwtUtils.sign({ id:userFound.id, username: userFound.username }),
 };
 
@@ -48,5 +48,5 @@ export default {
   invalidEmail,
   invalidPassword,
   errorMessage,
-  requestResponse,
+  requestTokenResponse,
 }
