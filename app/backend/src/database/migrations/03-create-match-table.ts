@@ -21,6 +21,7 @@ export default {
       },
       homeTeamGoals: {
         allowNull: false,
+        field: 'home_team_goals',
         type: DataTypes.INTEGER,
       },
       awayTeamId: {
@@ -34,10 +35,12 @@ export default {
       },
       awayTeamGoals: {
         allowNull: false,
+        field: 'away_team_goals',
         type: DataTypes.INTEGER,
       },
       inProgress: {
         allowNull: false,
+        field: 'in_progress',
         type: DataTypes.INTEGER,
       }
     })
