@@ -172,12 +172,22 @@ describe('Testes para o endpoint /login', function() {
   });
 
   it('Verifica a resposta do método GET na rota /login/role com token token inválido', async function() {
-    sinon.stub(Validation, 'tokenValidation')
     const httpResponse = await chai
       .request(app)
-      .get('/login/role');
+      .get('/login/role')
+      .set('Authorization', `Bearer InvalidToken`);
     
     expect(httpResponse.status).to.be.equal(401);
-    expect(httpResponse.body).to.be.deep.equal(usersMock.errorMessage.tokenNotFound);
+    expect(httpResponse.body).to.be.deep.equal(usersMock.errorMessage.userTokenNotFound);
+  });
+
+  it('Verifica a resposta do método GET na rota /login/role com token token válido', async function() {
+    const httpResponse = await chai
+      .request(app)
+      .get('/login/role')
+      .set('Authorization', `Bearer InvalidToken`);
+    
+    expect(httpResponse.status).to.be.equal(200);
+    expect(httpResponse.body).to.be.deep.equal(usersMock.getRoleResponse);
   });
 });

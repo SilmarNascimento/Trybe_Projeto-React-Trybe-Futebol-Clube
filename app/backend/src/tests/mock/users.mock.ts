@@ -9,10 +9,13 @@ const SALT_ROUND = 10;
 const userFound = {
   id: 2,
   username: 'Silmar',
-  role: 'Admin',
+  role: 'admin',
   email: 'silmar@trybe.com',
   password: bcrypt.hashSync(validPassword, SALT_ROUND),
+}
 
+const getRoleResponse = {
+  role: 'admin'
 }
 
 const requestResponse = {
@@ -41,6 +44,7 @@ export default {
   validEmail,
   validPassword,
   userFound,
+  getRoleResponse,
   invalidEmail,
   invalidPassword,
   errorMessage,
