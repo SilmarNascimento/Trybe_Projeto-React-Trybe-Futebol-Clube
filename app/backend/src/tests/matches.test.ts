@@ -77,15 +77,35 @@ describe('Testes para o endpoint /teams', function() {
   });
 
   //METHOD PATCH ENDPOINT /matches
-  it('Verifica a resposta do método POST na rota /matches/:id para atualizar uma partida em andamento', async function() {
-    sinon.stub(SequelizeMatch, 'create').resolves(matchesMock.postMatchesResponse as any);
+  it('Verifica a resposta do método POST na rota /matches para adiconar uma partida ao banco de dados', async function() {
+    sinon.stub(SequelizeMatch, 'create').resolves(matchesMock.postMatchesResponse.valid as any);
 
     const httpResponse = await chai
       .request(app)
-      .patch('/matches/2')
-      .send(matchesMock.postMatchesRequest);
+      .post('/matches')
+      .send(matchesMock.postMatchesRequest.valid);
     
     expect(httpResponse.status).to.be.equal(201);
-    expect(httpResponse.body).to.be.deep.equal(matchesMock.postMatchesResponse);
+    expect(httpResponse.body).to.be.deep.equal(matchesMock.postMatchesResponse.valid);
+  });
+
+  it('Verifica a resposta do método POST na rota /matches caso seja fornecido nomes de times iguais', async function() {
+    const httpResponse = await chai
+      .request(app)
+      .patch('/matches')
+      .send(matchesMock.postMatchesRequest.sameTeams);
+    
+    expect(httpResponse.status).to.be.equal(422);
+    expect(httpResponse.body).to.be.deep.equal(matchesMock.postMatchesResponse.sameTeams);
+  });
+
+  it('Verifica a resposta do método POST na rota /matches caso algum time fornecido não esteja cadastrado', async function() {
+    const httpResponse = await chai
+      .request(app)
+      .patch('/matches')
+      .send(matchesMock.postMatchesRequest.teamNotFound);
+    
+    expect(httpResponse.status).to.be.equal(404);
+    expect(httpResponse.body).to.be.deep.equal(matchesMock.postMatchesResponse.teamNotFound);
   });
 });

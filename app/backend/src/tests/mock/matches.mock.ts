@@ -87,20 +87,40 @@ const onGoingMatchPatchRequest = {
 
 //POST
 const postMatchesRequest = {
-  "homeTeamId": 16,
-  "homeTeamGoals": 2,
-  "awayTeamId": 8,
-  "awayTeamGoals": 2,
-  "inProgress": true
+  valid: {
+    "homeTeamId": 16,
+    "homeTeamGoals": 2,
+    "awayTeamId": 8,
+    "awayTeamGoals": 2,
+    "inProgress": true,
+  },
+  sameTeams: {
+    "homeTeamId": 2,
+    "homeTeamGoals": 2,
+    "awayTeamId": 2,
+    "awayTeamGoals": 2,
+    "inProgress": true
+  },
+  teamNotFound: {
+    "homeTeamId": 200,
+    "homeTeamGoals": 2,
+    "awayTeamId": 2,
+    "awayTeamGoals": 2,
+    "inProgress": true
+  }
 }
 
 const postMatchesResponse = {
-  "id": 1,
-  "homeTeamId": 16,
-  "homeTeamGoals": 2,
-  "awayTeamId": 8,
-  "awayTeamGoals": 2,
-  "inProgress": true
+  valid: {
+    "id": 1,
+    "homeTeamId": 16,
+    "homeTeamGoals": 2,
+    "awayTeamId": 8,
+    "awayTeamGoals": 2,
+    "inProgress": true,
+  },
+  sameTeams: { message: 'It is not possible to create a match with two equal teams' },
+  teamNotFound: { message: 'There is no team with such id!' },
 }
 
 export default {
