@@ -190,7 +190,7 @@ describe('Testes para o endpoint /login', function() {
       .get('/login/role')
       .set('Authorization', `Bearer ${token}`);
     
-    expect(httpResponse.body).to.be.deep.equal(usersMock.getRoleResponse);
     expect(httpResponse.status).to.be.equal(200);
+    expect(httpResponse.body).to.be.deep.equal(usersMock.getRoleResponse);
   });
 });
