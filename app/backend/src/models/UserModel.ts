@@ -9,10 +9,7 @@ export default class UserModel implements IUserModel {
 
   async createToken(data: Pick<IUser, 'email' | 'password'>): Promise<IToken | void> {
     const { email, password } = data;
-    console.log(email, password);
     const userFound = await this.ormModel.findOne({ where: { email } });
-    console.log(userFound);
-
     if (userFound && bcrypt.compareSync(password, userFound.password)) {
       const { id, username } = userFound;
       const token = jwtUtils.sign({ id, username });

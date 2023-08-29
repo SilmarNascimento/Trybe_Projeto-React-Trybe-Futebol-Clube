@@ -5,18 +5,14 @@ import { IUserModel } from '../Interfaces/users/IUserModel';
 import { loginSchema } from './schema';
 
 export default class Validation {
-  constructor(private userModel: IUserModel = new UserModel()) {
-    this.tokenValidation = this.tokenValidation.bind(this);
-  }
+  constructor(private userModel: IUserModel = new UserModel()) {}
 
   static loginValidation(
     request: Request,
     response: Response,
     next: NextFunction,
   ): Response | void {
-    console.log('entrei validação');
     const { email, password } = request.body;
-    console.log('email da request: ', email);
     if (!email || !password) {
       return response.status(400).json({ message: 'All fields must be filled' });
     }
@@ -31,19 +27,21 @@ export default class Validation {
     return authorization.split(' ')[1];
   }
 
-  async tokenValidation(
+  static async tokenValidation(
     request: Request,
     response: Response,
     next: NextFunction,
   ): Promise<Response | void> {
     const { authorization } = request.headers;
-    if (!authorization) { return response.status(401).json({ message: 'Token not found' }); }
+    if (!authorization) {
+      return response.status(401).json({ message: 'Token not found' });
+    }
     const token = Validation.getToken(authorization);
-    const decoded = jwtUtils.verify(token);
-    const user = await this.userModel.findById(decoded.id);
-    if (!user) {
+    try {
+      jwtUtils.verify(token);
+      next();
+    } catch (error) {
       return response.status(401).json({ message: 'Token must be a valid token' });
     }
-    next();
   }
 }

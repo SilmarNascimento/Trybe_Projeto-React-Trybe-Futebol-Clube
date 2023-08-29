@@ -9,11 +9,7 @@ export default class UserService {
   public async userLogin(
     data: Pick<IUser, 'email' | 'password'>,
   ): Promise<ServiceResponse<IToken>> {
-    console.log('entrei an service');
-
     const token = await this.userModel.createToken(data);
-    console.log(token);
-
     if (!token) {
       return { status: 'UNAUTHORIZED', data: { message: 'Invalid email or password' } };
     }

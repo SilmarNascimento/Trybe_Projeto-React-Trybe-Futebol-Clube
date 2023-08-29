@@ -7,6 +7,7 @@ import SequelizeUser from '../database/models/SequelizeUser';
 import usersMock from './mock/users.mock';
 
 import { app } from '../app';
+import Validation from '../middleware/Validation';
 
 chai.use(chaiHttp);
 
@@ -50,9 +51,10 @@ describe('Testes para o endpoint /login', function() {
   });
 
   it('Verifica a resposta do método POST na rota /login com email de formato inválido', async function() {
+    sinon.stub(Validation, 'loginValidation').returns();
     const httpResponse = await chai
       .request(app)
-      .get('/login')
+      .post('/login')
       .send({
         email: usersMock.invalidEmail.pattern,
         password: usersMock.validPassword,
@@ -65,7 +67,7 @@ describe('Testes para o endpoint /login', function() {
   it('Verifica a resposta do método POST na rota /login com email de tipo inválido', async function() {
     const httpResponse = await chai
       .request(app)
-      .get('/login')
+      .post('/login')
       .send({
         email: usersMock.invalidEmail.type,
         password: usersMock.validPassword,
@@ -78,7 +80,7 @@ describe('Testes para o endpoint /login', function() {
   it('Verifica a resposta do método POST na rota /login com password de formato inválido', async function() {
     const httpResponse = await chai
       .request(app)
-      .get('/login')
+      .post('/login')
       .send({
         email: usersMock.validEmail,
         password: usersMock.invalidPassword.length,
@@ -91,7 +93,7 @@ describe('Testes para o endpoint /login', function() {
   it('Verifica a resposta do método POST na rota /login com password de tipo inválido', async function() {
     const httpResponse = await chai
       .request(app)
-      .get('/login')
+      .post('/login')
       .send({
         email: usersMock.validEmail,
         password: usersMock.invalidPassword.type,
@@ -104,7 +106,7 @@ describe('Testes para o endpoint /login', function() {
   it('Verifica a resposta do método POST na rota /login com password de tipo inválido', async function() {
     const httpResponse = await chai
       .request(app)
-      .get('/login')
+      .post('/login')
       .send({
         email: usersMock.validEmail,
         password: usersMock.invalidPassword.type,
@@ -114,12 +116,12 @@ describe('Testes para o endpoint /login', function() {
     expect(httpResponse.body).to.be.deep.equal(usersMock.errorMessage.invalidRequest);
   });
 
-  it.only('Verifica a resposta do método POST na rota /login com um email não cadastrado', async function() {
+  it('Verifica a resposta do método POST na rota /login com um email não cadastrado', async function() {
     sinon.stub(SequelizeUser, 'findOne').resolves(null);
 
     const httpResponse = await chai
       .request(app)
-      .get('/login')
+      .post('/login')
       .send({
         email: usersMock.validEmail,
         password: usersMock.validPassword,
@@ -134,7 +136,7 @@ describe('Testes para o endpoint /login', function() {
 
     const httpResponse = await chai
       .request(app)
-      .get('/login')
+      .post('/login')
       .send({
         email: usersMock.validEmail,
         password: usersMock.invalidPassword.incorrect,
@@ -149,7 +151,7 @@ describe('Testes para o endpoint /login', function() {
 
     const httpResponse = await chai
       .request(app)
-      .get('/login')
+      .post('/login')
       .send({
         email: usersMock.validEmail,
         password: usersMock.validPassword,
@@ -157,5 +159,25 @@ describe('Testes para o endpoint /login', function() {
     
     expect(httpResponse.status).to.be.equal(200);
     expect(httpResponse.body).to.be.deep.equal(usersMock.requestResponse);
+  });
+
+  //ENDPOINT /LOGIN/ROLE - TOKEN
+  it('Verifica a resposta do método GET na rota /login/role sem token', async function() {
+    const httpResponse = await chai
+      .request(app)
+      .get('/login/role');
+    
+    expect(httpResponse.status).to.be.equal(401);
+    expect(httpResponse.body).to.be.deep.equal(usersMock.errorMessage.tokenNotFound);
+  });
+
+  it('Verifica a resposta do método GET na rota /login/role com token token inválido', async function() {
+    sinon.stub(Validation, 'tokenValidation')
+    const httpResponse = await chai
+      .request(app)
+      .get('/login/role');
+    
+    expect(httpResponse.status).to.be.equal(401);
+    expect(httpResponse.body).to.be.deep.equal(usersMock.errorMessage.tokenNotFound);
   });
 });
