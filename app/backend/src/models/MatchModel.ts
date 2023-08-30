@@ -6,7 +6,7 @@ import SequelizeMatch from '../database/models/SequelizeMatch';
 export default class MatchModel implements IMatchModel {
   private ormModel = SequelizeMatch;
 
-  async findAll(): Promise<IMatch[]> {
+  async findByQuery(inProg?: string): Promise<IMatch[]> {
     const allMatches = await this.ormModel.findAll({
       include: [{
         model: SequelizeTeam,
@@ -18,12 +18,12 @@ export default class MatchModel implements IMatchModel {
         attributes: ['team_name'],
       }],
     });
+    if (inProg) {
+      const inProgress = inProg === 'true';
+      const matchesByProgress = allMatches
+        .filter((match) => match.dataValues.inProgress === inProgress);
+      return matchesByProgress;
+    }
     return allMatches;
-  }
-
-  async findById(id: number): Promise<IMatch | null> {
-    const dbTeam = await this.ormModel.findByPk(id);
-    if (!dbTeam) return null;
-    return dbTeam;
   }
 }

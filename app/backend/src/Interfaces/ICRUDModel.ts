@@ -10,6 +10,10 @@ export interface ICRUDModelReaderById<Type> {
   findById(id: number): Promise<Type | null>;
 }
 
+export interface ICRUDModelReaderByQuery<Type> {
+  findByQuery(query?: string): Promise<Type[]>;
+}
+
 export interface ICRUDModelUpdater<Type> {
   update(id: number, data: Partial<Type>): Promise<Type | null>;
 }
