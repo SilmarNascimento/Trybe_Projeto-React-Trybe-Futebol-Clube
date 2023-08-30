@@ -12,7 +12,7 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Testes para o endpoint /teams', function() {
+describe('Testes para o endpoint /matches', function() {
   beforeEach(function () { sinon.restore(); });
   //METHOD GET ENDPOINT /matches
   it('Verifica a resposta do método GET na rota /matches', async function() {
@@ -27,8 +27,8 @@ describe('Testes para o endpoint /teams', function() {
     expect(httpResponse.body).to.be.deep.equal(matchesMock.getMatchesResponse.getAll);
   });
 
-  it('Verifica a resposta do método GET na rota /matches passando o filtro inProgress=true por query string', async function() {
-    sinon.stub(SequelizeMatch, 'findAll').resolves(matchesMock.getMatchesResponse.inProgress as any);
+  it.only('Verifica a resposta do método GET na rota /matches passando o filtro inProgress=true por query string', async function() {
+    sinon.stub(SequelizeMatch, 'findAll').resolves(matchesMock.getMatchesResponse.getAll as any);
 
     const httpResponse = await chai
       .request(app)

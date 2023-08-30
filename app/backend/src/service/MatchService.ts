@@ -6,6 +6,25 @@ import MatchModel from '../models/MatchModel';
 export default class MatchService {
   constructor(private matchModel: IMatchModel = new MatchModel()) {}
 
+  public async createMatch(
+    data: Pick<IMatch, 'homeTeamGoals' | 'awayTeamGoals' | 'homeTeamId' | 'awayTeamId'>,
+  ): Promise<ServiceResponse<IMatch>> {
+    const { homeTeamId, awayTeamId } = data;
+    if (homeTeamId === awayTeamId) {
+      return { status: 'UNPROCESSABLE_CONTENT',
+        data: {
+          message: 'It is not possible to create a match with two equal teams',
+        } };
+    }
+    const homeTeam = await this.matchModel.findById(homeTeamId);
+    const awayTeam = await this.matchModel.findById(awayTeamId);
+    if (!homeTeam || !awayTeam) {
+      return { status: 'NOT_FOUND', data: { message: 'There is no team with such id' } };
+    }
+    const newMatch = await this.matchModel.create(data);
+    return { status: 'SUCCESSFUL', data: newMatch };
+  }
+
   public async getMatchByQuery(inProg?: string): Promise<ServiceResponse<IMatch[]>> {
     const matchesByProgress = await this.matchModel.findByQuery(inProg);
     if (!matchesByProgress.length) {

@@ -5,6 +5,18 @@ import MatchService from '../service/MatchService';
 export default class MatchController {
   constructor(private matchService = new MatchService()) {}
 
+  public async createMatch(request: Request, response: Response): Promise<Response> {
+    const {
+      homeTeamId,
+      awayTeamId,
+      homeTeamGoals,
+      awayTeamGoals,
+    } = request.body;
+    const { status, data } = await this.matchService
+      .createMatch({ homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals });
+    return response.status(mapStatusHTTP(status)).json(data);
+  }
+
   public async getMatchByQuery(request: Request, response: Response): Promise<Response> {
     const { inProgress } = request.query;
     if (typeof inProgress === 'string' || typeof inProgress === 'undefined') {
