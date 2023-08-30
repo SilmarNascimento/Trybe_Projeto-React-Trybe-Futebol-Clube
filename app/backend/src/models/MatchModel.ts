@@ -6,7 +6,7 @@ import SequelizeMatch from '../database/models/SequelizeMatch';
 export default class MatchModel implements IMatchModel {
   private ormModel = SequelizeMatch;
 
-  async findByQuery(inProg?: string): Promise<IMatch[]> {
+  public async findByQuery(inProg?: string): Promise<IMatch[]> {
     const allMatches = await this.ormModel.findAll({
       include: [{
         model: SequelizeTeam,
@@ -18,12 +18,48 @@ export default class MatchModel implements IMatchModel {
         attributes: ['team_name'],
       }],
     });
-    if (inProg) {
+    if (inProg === 'true' || inProg === 'false') {
       const inProgress = inProg === 'true';
       const matchesByProgress = allMatches
         .filter((match) => match.dataValues.inProgress === inProgress);
       return matchesByProgress;
     }
     return allMatches;
+  }
+
+  public async findById(id: number): Promise<IMatch | null> {
+    const matchById = await this.ormModel.findByPk(id);
+    if (!matchById) {
+      return null;
+    }
+    return matchById;
+  }
+
+  public async update(
+    id: number,
+    data: Pick<IMatch, 'homeTeamGoals' | 'awayTeamGoals'>,
+  ): Promise<IMatch | null> {
+    const { homeTeamGoals, awayTeamGoals } = data;
+    try {
+      await this.ormModel.update({
+        homeTeamGoals,
+        awayTeamGoals,
+      }, { where: { id } });
+      const matchUpdatedById = await this.findById(id);
+      return matchUpdatedById;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  public async updateFinishedMatch(id: number): Promise<boolean> {
+    try {
+      await this.ormModel.update({
+        inProgress: false,
+      }, { where: { id } });
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }

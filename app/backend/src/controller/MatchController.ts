@@ -13,4 +13,19 @@ export default class MatchController {
     }
     return response.status(500).json({ message: 'Internal Server Error' });
   }
+
+  public async updateMatchGoals(request: Request, response: Response): Promise<Response> {
+    const { id } = request.params;
+    const { homeTeamGoals, awayTeamGoals } = request.body;
+    const { status, data } = await this.matchService
+      .updateMatchGoals(parseInt(id, 10), { homeTeamGoals, awayTeamGoals });
+    return response.status(mapStatusHTTP(status)).json(data);
+  }
+
+  public async updateFinishedMatch(request: Request, response: Response): Promise<Response> {
+    const { id } = request.params;
+    const { status, data } = await this.matchService
+      .updateFinishedMatch(parseInt(id, 10));
+    return response.status(mapStatusHTTP(status)).json(data);
+  }
 }

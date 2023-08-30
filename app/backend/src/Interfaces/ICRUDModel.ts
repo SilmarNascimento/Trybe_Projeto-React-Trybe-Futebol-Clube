@@ -18,6 +18,10 @@ export interface ICRUDModelUpdater<Type> {
   update(id: number, data: Partial<Type>): Promise<Type | null>;
 }
 
+export interface ICRUDModelUpdaterFinishMatch {
+  updateFinishedMatch(id: number): Promise<boolean>;
+}
+
 export interface ICRUDModelDeleter {
   delete(id: number): Promise<number>;
 }
