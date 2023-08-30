@@ -28,6 +28,7 @@ export default class Validation {
     response: Response,
     next: NextFunction,
   ): Promise<Response | void> {
+    console.log('entrei validation');
     const { authorization } = request.headers;
     if (!authorization) {
       return response.status(401).json({ message: 'Token not found' });

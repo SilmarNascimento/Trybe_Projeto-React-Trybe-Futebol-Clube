@@ -10,6 +10,8 @@ export default class MatchService {
     data: Pick<IMatch, 'homeTeamGoals' | 'awayTeamGoals' | 'homeTeamId' | 'awayTeamId'>,
   ): Promise<ServiceResponse<IMatch>> {
     const { homeTeamId, awayTeamId } = data;
+    console.log(data);
+
     if (homeTeamId === awayTeamId) {
       return { status: 'UNPROCESSABLE_CONTENT',
         data: {
@@ -19,10 +21,10 @@ export default class MatchService {
     const homeTeam = await this.matchModel.findById(homeTeamId);
     const awayTeam = await this.matchModel.findById(awayTeamId);
     if (!homeTeam || !awayTeam) {
-      return { status: 'NOT_FOUND', data: { message: 'There is no team with such id' } };
+      return { status: 'NOT_FOUND', data: { message: 'There is no team with such id!' } };
     }
     const newMatch = await this.matchModel.create(data);
-    return { status: 'SUCCESSFUL', data: newMatch };
+    return { status: 'CREATED', data: newMatch };
   }
 
   public async getMatchByQuery(inProg?: string): Promise<ServiceResponse<IMatch[]>> {
