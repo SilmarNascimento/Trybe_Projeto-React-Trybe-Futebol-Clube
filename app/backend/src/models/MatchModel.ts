@@ -22,11 +22,11 @@ export default class MatchModel implements IMatchModel {
       include: [{
         model: SequelizeTeam,
         as: 'homeTeam',
-        attributes: ['team_name'],
+        attributes: ['teamName'],
       }, {
         model: SequelizeTeam,
         as: 'awayTeam',
-        attributes: ['team_name'],
+        attributes: ['teamName'],
       }],
     });
     if (inProg === 'true' || inProg === 'false') {
