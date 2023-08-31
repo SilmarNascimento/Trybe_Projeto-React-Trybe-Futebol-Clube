@@ -10,8 +10,6 @@ export default class MatchService {
     data: Pick<IMatch, 'homeTeamGoals' | 'awayTeamGoals' | 'homeTeamId' | 'awayTeamId'>,
   ): Promise<ServiceResponse<IMatch>> {
     const { homeTeamId, awayTeamId } = data;
-    console.log(data);
-
     if (homeTeamId === awayTeamId) {
       return { status: 'UNPROCESSABLE_CONTENT',
         data: {
