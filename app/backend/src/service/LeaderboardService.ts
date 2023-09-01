@@ -9,7 +9,12 @@ export default class LeaderboardService {
   public async getPlaceLeaderboardInformation(
     local: string,
   ): Promise<ServiceResponse<ILeaderboard[]>> {
-    const allTeams = await this.teamModel.getPlaceLeaderboardInformation(local);
-    return { status: 'SUCCESSFUL', data: allTeams };
+    const placeLeaderboard = await this.teamModel.getPlaceLeaderboardInformation(local);
+    return { status: 'SUCCESSFUL', data: placeLeaderboard };
+  }
+
+  public async getAllLeaderboardInformation(): Promise<ServiceResponse<ILeaderboard[]>> {
+    const leaderboard = await this.teamModel.getAllLeaderboardInformation();
+    return { status: 'SUCCESSFUL', data: leaderboard };
   }
 }

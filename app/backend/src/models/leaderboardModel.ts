@@ -6,7 +6,6 @@ import { ILeaderboard } from '../Interfaces/leaderboard/ILeaderboard';
 
 export default class LeaderboardModel {
   private teamModel = SequelizeTeam;
-  private matchModel = SequelizeMatch;
 
   async getPlaceLeaderboardInformation(local: string): Promise<ILeaderboard[]> {
     const finishedTeamsMatches = await this.getAllFinishedMatches(local);
@@ -22,10 +21,11 @@ export default class LeaderboardModel {
     const formattedAwayMatches = this.resumeTeamPlaceInformation(finishedAwayMatches, 'away');
     const formattedMatches = this
       .resumeLeaderboardInformation(formattedHomeMatches, formattedAwayMatches);
+    this.sortTeamInformation(formattedMatches);
     return formattedMatches;
   }
 
-  getAllFinishedMatches = async (local: string) => {
+  private getAllFinishedMatches = async (local: string) => {
     if (local === 'home') {
       return await this.teamModel.findAll({
         include: [{
@@ -44,7 +44,10 @@ export default class LeaderboardModel {
     }) as unknown as ITeamAssociation[];
   };
 
-  resumeTeamPlaceInformation = (array: ITeamAssociation[], local: string) => array.map((team) => {
+  private resumeTeamPlaceInformation = (
+    array: ITeamAssociation[],
+    local: string,
+  ) => array.map((team) => {
     const place = local === 'home' ? team.homeMatches : team.awayMatches;
 
     const teamInformation = { name: team.teamName } as ILeaderboard;
@@ -61,7 +64,7 @@ export default class LeaderboardModel {
     return teamInformation;
   });
 
-  resumeLeaderboardInformation = (
+  private resumeLeaderboardInformation = (
     homeArray: ILeaderboard[],
     awayArray: ILeaderboard[],
   ): ILeaderboard[] => homeArray.map((homeMatch) => {
@@ -81,14 +84,14 @@ export default class LeaderboardModel {
     return teamInformation;
   });
 
-  sortTeamInformation = (array: ILeaderboard[]): void => {
+  private sortTeamInformation = (array: ILeaderboard[]): void => {
     array.sort((a, b) => b.goalsFavor - a.goalsFavor);
     array.sort((a, b) => b.goalsBalance - a.goalsBalance);
     array.sort((a, b) => b.totalVictories - a.totalVictories);
     array.sort((a, b) => b.totalPoints - a.totalPoints);
   };
 
-  getTotalVictories = (array: IMatch[], local: string) => {
+  private getTotalVictories = (array: IMatch[], local: string) => {
     if (local === 'home') {
       return array.reduce((acc, curr) => {
         if (curr.homeTeamGoals > curr.awayTeamGoals) return acc + 1;
@@ -101,12 +104,12 @@ export default class LeaderboardModel {
     }, 0);
   };
 
-  getTotalDraws = (array: IMatch[]) => array.reduce((acc, curr) => {
+  private getTotalDraws = (array: IMatch[]) => array.reduce((acc, curr) => {
     if (curr.homeTeamGoals === curr.awayTeamGoals) return acc + 1;
     return acc;
   }, 0);
 
-  getTotalLosses = (array: IMatch[], local: string) => {
+  private getTotalLosses = (array: IMatch[], local: string) => {
     if (local === 'home') {
       return array.reduce((acc, curr) => {
         if (curr.homeTeamGoals < curr.awayTeamGoals) return acc + 1;
@@ -119,14 +122,14 @@ export default class LeaderboardModel {
     }, 0);
   };
 
-  getGoalsFavor = (array: IMatch[], local: string) => {
+  private getGoalsFavor = (array: IMatch[], local: string) => {
     if (local === 'home') {
       return array.reduce((acc, curr) => acc + curr.homeTeamGoals, 0);
     }
     return array.reduce((acc, curr) => acc + curr.awayTeamGoals, 0);
   };
 
-  getGoalsOwn = (array: IMatch[], local: string) => {
+  private getGoalsOwn = (array: IMatch[], local: string) => {
     if (local === 'home') {
       return array.reduce((acc, curr) => acc + curr.awayTeamGoals, 0);
     }
