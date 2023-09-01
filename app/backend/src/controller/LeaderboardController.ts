@@ -5,8 +5,10 @@ import LeaderboardService from '../service/LeaderboardService';
 export default class LeaderboardController {
   constructor(private leaderboardService = new LeaderboardService()) {}
 
-  public async getAllTeams(_request: Request, response: Response): Promise<Response> {
-    const { status, data } = await this.leaderboardService.getAllTeams();
+  public async getResumedTeamInformation(request: Request, response: Response): Promise<Response> {
+    const splittedString = request.originalUrl.split('/');
+    const local = splittedString[splittedString.length - 1];
+    const { status, data } = await this.leaderboardService.getAllTeams(local);
     return response.status(mapStatusHTTP(status)).json(data);
   }
 }

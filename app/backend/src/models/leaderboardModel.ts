@@ -10,46 +10,46 @@ export default class LeaderboardModel {
   private teamModel = SequelizeTeam;
   private matchModel = SequelizeMatch;
 
-  async getHomeLeaderboardInformation(): Promise<ILeaderboard[]> {
-    const finishedTeamsMatches = await this.teamModel.findAll({
-      include: [{
-        model: SequelizeMatch,
-        as: 'homeMatches',
-        where: { inProgress: false },
-      }],
-    }) as unknown as ITeamAssociation[];
-    const formattedHomeMatches = this.resumeTeamInformation(finishedTeamsMatches, 'home');
+  async getLeaderboardInformation(local: string): Promise<ILeaderboard[]> {
+    const finishedTeamsMatches = await this.getAllFinishedMatches(local);
+    const formattedHomeMatches = this.resumeTeamInformation(finishedTeamsMatches, local);
     this.sortTeamInformation(formattedHomeMatches);
     return formattedHomeMatches;
   }
 
-  async getAwayLeaderboardInformation(): Promise<ILeaderboard[]> {
-    const finishedTeamsMatches = await this.teamModel.findAll({
+  getAllFinishedMatches = async (local: string) => {
+    if (local === 'home') {
+      return await this.teamModel.findAll({
+        include: [{
+          model: SequelizeMatch,
+          as: 'homeMatches',
+          where: { inProgress: false },
+        }],
+      }) as unknown as ITeamAssociation[];
+    }
+    return await this.teamModel.findAll({
       include: [{
         model: SequelizeMatch,
         as: 'awayMatches',
         where: { inProgress: false },
       }],
     }) as unknown as ITeamAssociation[];
-    const formattedAwayMatches = this.resumeTeamInformation(finishedTeamsMatches, 'away');
-    this.sortTeamInformation(formattedAwayMatches);
-    return formattedAwayMatches;
-  }
+  };
 
   resumeTeamInformation = (array: ITeamAssociation[], local: string) => array.map((team) => {
     const place = local === 'home' ? team.homeMatches : team.awayMatches;
 
     const teamInformation = { name: team.teamName } as ILeaderboard;
     teamInformation.totalGames = place.length;
-    teamInformation.totalVictories = this.getTotalVictories(place);
+    teamInformation.totalVictories = this.getTotalVictories(place, local);
     teamInformation.totalDraws = this.getTotalDraws(place);
-    teamInformation.totalLosses = this.getTotalLosses(place);
+    teamInformation.totalLosses = this.getTotalLosses(place, local);
     teamInformation.totalPoints = teamInformation.totalVictories * 3 + teamInformation.totalDraws;
-    teamInformation.goalsFavor = this.getGoalsFavor(place);
-    teamInformation.goalsOwn = this.getGoalsOwn(place);
+    teamInformation.goalsFavor = this.getGoalsFavor(place, local);
+    teamInformation.goalsOwn = this.getGoalsOwn(place, local);
     teamInformation.goalsBalance = teamInformation.goalsFavor - teamInformation.goalsOwn;
     const efficiency = teamInformation.totalPoints / (teamInformation.totalGames * 3);
-    teamInformation.efficiency = Number((efficiency * 100).toFixed(2));
+    teamInformation.efficiency = (efficiency * 100).toFixed(2);
     return teamInformation;
   });
 
@@ -57,24 +57,51 @@ export default class LeaderboardModel {
     array.sort((a, b) => b.goalsFavor - a.goalsFavor);
     array.sort((a, b) => b.goalsBalance - a.goalsBalance);
     array.sort((a, b) => b.totalVictories - a.totalVictories);
+    array.sort((a, b) => b.totalPoints - a.totalPoints);
   };
 
-  getTotalVictories = (array: IMatch[]) => array.reduce((acc, curr) => {
-    if (curr.homeTeamGoals > curr.awayTeamGoals) return acc + 1;
-    return acc;
-  }, 0);
+  getTotalVictories = (array: IMatch[], local: string) => {
+    if (local === 'home') {
+      return array.reduce((acc, curr) => {
+        if (curr.homeTeamGoals > curr.awayTeamGoals) return acc + 1;
+        return acc;
+      }, 0);
+    }
+    return array.reduce((acc, curr) => {
+      if (curr.awayTeamGoals > curr.homeTeamGoals) return acc + 1;
+      return acc;
+    }, 0);
+  };
 
   getTotalDraws = (array: IMatch[]) => array.reduce((acc, curr) => {
     if (curr.homeTeamGoals === curr.awayTeamGoals) return acc + 1;
     return acc;
   }, 0);
 
-  getTotalLosses = (array: IMatch[]) => array.reduce((acc, curr) => {
-    if (curr.homeTeamGoals < curr.awayTeamGoals) return acc + 1;
-    return acc;
-  }, 0);
+  getTotalLosses = (array: IMatch[], local: string) => {
+    if (local === 'home') {
+      return array.reduce((acc, curr) => {
+        if (curr.homeTeamGoals < curr.awayTeamGoals) return acc + 1;
+        return acc;
+      }, 0);
+    }
+    return array.reduce((acc, curr) => {
+      if (curr.awayTeamGoals < curr.homeTeamGoals) return acc + 1;
+      return acc;
+    }, 0);
+  };
 
-  getGoalsFavor = (array: IMatch[]) => array.reduce((acc, curr) => acc + curr.homeTeamGoals, 0);
+  getGoalsFavor = (array: IMatch[], local: string) => {
+    if (local === 'home') {
+      return array.reduce((acc, curr) => acc + curr.homeTeamGoals, 0);
+    }
+    return array.reduce((acc, curr) => acc + curr.awayTeamGoals, 0);
+  };
 
-  getGoalsOwn = (array: IMatch[]) => array.reduce((acc, curr) => acc + curr.awayTeamGoals, 0);
+  getGoalsOwn = (array: IMatch[], local: string) => {
+    if (local === 'home') {
+      return array.reduce((acc, curr) => acc + curr.awayTeamGoals, 0);
+    }
+    return array.reduce((acc, curr) => acc + curr.homeTeamGoals, 0);
+  };
 }
