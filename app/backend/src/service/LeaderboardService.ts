@@ -6,8 +6,10 @@ import LeaderboardModel from '../models/leaderboardModel';
 export default class LeaderboardService {
   constructor(private teamModel = new LeaderboardModel()) {}
 
-  public async getAllTeams(local: string): Promise<ServiceResponse<ILeaderboard[]>> {
-    const allTeams = await this.teamModel.getLeaderboardInformation(local);
+  public async getPlaceLeaderboardInformation(
+    local: string,
+  ): Promise<ServiceResponse<ILeaderboard[]>> {
+    const allTeams = await this.teamModel.getPlaceLeaderboardInformation(local);
     return { status: 'SUCCESSFUL', data: allTeams };
   }
 }
