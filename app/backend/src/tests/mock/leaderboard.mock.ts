@@ -172,37 +172,37 @@ const getResponse = {
   }],
   allmatches: [{
     "name": "Santos",
-    "totalPoints": 9,
-    "totalGames": 3,
+    "totalPoints": 10,
+    "totalGames": 4,
     "totalVictories": 3,
-    "totalDraws": 0,
+    "totalDraws": 1,
     "totalLosses": 0,
-    "goalsFavor": 9,
-    "goalsOwn": 3,
-    "goalsBalance": 6,
-    "efficiency": "100.00"
+    "goalsFavor": 7,
+    "goalsOwn": 2,
+    "goalsBalance": 5,
+    "efficiency": "83.33"
   },{
     "name": "Palmeiras",
-    "totalPoints": 9,
-    "totalGames": 3,
-    "totalVictories": 3,
-    "totalDraws": 0,
-    "totalLosses": 0,
-    "goalsFavor": 9,
-    "goalsOwn": 3,
-    "goalsBalance": 6,
-    "efficiency": "100.00"
+    "totalPoints": 5,
+    "totalGames": 4,
+    "totalVictories": 1,
+    "totalDraws": 2,
+    "totalLosses": 1,
+    "goalsFavor": 3,
+    "goalsOwn": 4,
+    "goalsBalance": -1,
+    "efficiency": "41.67"
   },{
     "name": "Botafogo",
-    "totalPoints": 9,
-    "totalGames": 3,
-    "totalVictories": 3,
-    "totalDraws": 0,
-    "totalLosses": 0,
-    "goalsFavor": 9,
-    "goalsOwn": 3,
-    "goalsBalance": 6,
-    "efficiency": "100.00"
+    "totalPoints": 1,
+    "totalGames": 4,
+    "totalVictories": 0,
+    "totalDraws": 1,
+    "totalLosses": 3,
+    "goalsFavor": 2,
+    "goalsOwn": 6,
+    "goalsBalance": -4,
+    "efficiency": "8.33"
   }],
 }
 
