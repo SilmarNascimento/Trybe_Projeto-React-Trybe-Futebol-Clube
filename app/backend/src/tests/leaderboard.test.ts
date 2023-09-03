@@ -15,22 +15,16 @@ const { expect } = chai;
 describe('Testes para o endpoint /leaderboard', function() {
   beforeEach(function () { sinon.restore(); });
   //METHOD GET ENDPOINT /leaderboard/home
-  it('Verifica a resposta do método GET na rota /leaderboard/home caso algum time fornecido não esteja cadastrado', async function() {
-    sinon.stub(SequelizeMatch, 'findByPk')
-      .onFirstCall()
-      .resolves(matchesMock.postMatchesResponse.team1 as any)
-      .onSecondCall()
-      .resolves(null);
-
-    const { token } = matchesMock.requestTokenResponse;
+  it('Verifica a resposta do método GET na rota /leaderboard/home', async function() {
+    sinon.stub(SequelizeMatch, 'findAll')
+      .resolves(matchesMock.postMatchesResponse.team1 as any);
 
     const httpResponse = await chai
       .request(app)
-      .post('/matches')
-      .set('Authorization', `Bearer ${token}`)
-      .send(matchesMock.postMatchesRequest.teamNotFound);
+      .get('/leaderboard/home')
+      .send();
     
-    expect(httpResponse.status).to.be.equal(404);
+    expect(httpResponse.status).to.be.equal(200);
     expect(httpResponse.body).to.be.deep.equal(matchesMock.postMatchesResponse.teamNotFound);
   });
 });

@@ -1,7 +1,7 @@
 import { ServiceResponse } from '../Interfaces/ServiceResponse';
 // import { ILeaderboardModel } from '../Interfaces/leaderboard/ILeaderboardModel';
 import { ILeaderboard } from '../Interfaces/leaderboard/ILeaderboard';
-import LeaderboardModel from '../models/leaderboardModel';
+import LeaderboardModel from '../models/LeaderboardModel';
 
 export default class LeaderboardService {
   constructor(private teamModel = new LeaderboardModel()) {}

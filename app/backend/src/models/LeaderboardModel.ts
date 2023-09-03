@@ -9,6 +9,7 @@ export default class LeaderboardModel {
 
   async getPlaceLeaderboardInformation(local: string): Promise<ILeaderboard[]> {
     const finishedTeamsMatches = await this.getAllFinishedMatches(local);
+    console.log(finishedTeamsMatches.filter((team) => team.teamName === 'Pa')[0].homeMatches);
     const formattedPlaceMatches = this.resumeTeamPlaceInformation(finishedTeamsMatches, local);
     this.sortTeamInformation(formattedPlaceMatches);
     return formattedPlaceMatches;
